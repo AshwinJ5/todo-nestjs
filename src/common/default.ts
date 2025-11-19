@@ -6,15 +6,15 @@ const MONGO_URI =
 const MONGO = {
   MONGO_URI,
 };
+const JWT_ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_TOKEN_SECRET || 'secret';
 
-/* Mongo Collections */
-const MONGO_COLLECTIONS = {
-  TODOS: 'todos',
+const JWT = {
+  JWT_ACCESS_TOKEN_SECRET,
 };
 
 const config = {
   MONGO,
-  MONGO_COLLECTIONS,
+  JWT,
 };
 
 export default config;

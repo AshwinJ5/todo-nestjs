@@ -6,7 +6,7 @@ export class Todo extends Document {
   @Prop({ required: true })
   title: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'users', required: false })
+  @Prop({ type: Types.ObjectId, ref: 'users', required: true })
   user: Types.ObjectId;
 
   @Prop({ default: false })

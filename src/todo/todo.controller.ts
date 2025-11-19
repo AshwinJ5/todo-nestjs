@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { TodoService } from './todo.service';
 
@@ -24,8 +25,12 @@ export class TodoController {
   }
 
   @Get()
-  findAll() {
-    return this.todoService.findAll();
+  findAll(
+    @Query('sort') sort: string,
+    @Query('completed') completed: string,
+    @Query('search') search: string,
+  ) {
+    return this.todoService.findAll(sort, completed, search);
   }
 
   @Get(':id')
