@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { config } from './common';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
+import { HealthModule } from './health/health.module';
 
 const { MONGO_URI } = config.MONGO;
 
@@ -17,6 +18,7 @@ const { MONGO_URI } = config.MONGO;
     MongooseModule.forRoot(MONGO_URI),
     TodoModule,
     UserModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
