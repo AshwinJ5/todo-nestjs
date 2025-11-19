@@ -5,10 +5,7 @@ import { TodoModule } from './todo/todo.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { config } from './common';
 import { ConfigModule } from '@nestjs/config';
-// import { UserController } from './user/user.controller';
-// import { UserModule } from './user/user.module';
-// import { AuthService } from './auth/auth.service';
-// import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 
 const { MONGO_URI } = config.MONGO;
 
@@ -19,8 +16,7 @@ const { MONGO_URI } = config.MONGO;
     }),
     MongooseModule.forRoot(MONGO_URI),
     TodoModule,
-    // UserModule,
-    // AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

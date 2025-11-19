@@ -11,26 +11,31 @@ import { InjectModel } from '@nestjs/mongoose';
 export class TodoService {
   constructor(@InjectModel(Todo.name) private todoModel: Model<Todo>) {}
 
-  async create(data: { title: string }) {
+  async create(userId, data) {
     try {
+      data.user = userId;
       return await this.todoModel.create(data);
     } catch (error) {
       throw new InternalServerErrorException(error || 'error');
     }
   }
 
-  async findAll(sortBy, completed, search) {
+  async findAll(userId, sortBy, completed, search) {
     try {
-      const filter = { title: {}, completed: {} };
       let sortQuery = {};
+      let searchQuery = {};
+      let completedQuery = {};
+      console.log(process.env.JWT_SECRET);
 
       if (search) {
-        filter.title = new RegExp(search, 'i');
+        searchQuery = { title: new RegExp(search, 'i') };
       }
 
-      if (completed === 'yes' || completed === 'no') {
-        filter.completed = completed === 'yes';
-      }
+      completed === 'yes'
+        ? (completedQuery = { completed: true })
+        : completed === 'no'
+          ? (completedQuery = { completed: false })
+          : {};
 
       if (sortBy === 'created') {
         sortQuery = { createdAt: -1 };
@@ -38,7 +43,14 @@ export class TodoService {
         sortQuery = { toBeCompletedBy: -1 };
       }
 
-      const todos = await this.todoModel.find(filter).sort(sortQuery);
+      const userQuery = { user: userId };
+
+      const todos = await this.todoModel
+        .find(
+          { ...searchQuery, ...completedQuery, ...userQuery },
+          { title: 1, completed: 1, toBeCompletedBy: 1, createdAt: 1 },
+        )
+        .sort(sortQuery);
 
       return todos.length ? todos : { message: 'No data found' };
     } catch (error) {
@@ -47,22 +59,29 @@ export class TodoService {
     }
   }
 
-  async findOne(id: string) {
-    const todo = await this.todoModel.findById(id);
+  async findOne(userId, id: string) {
+    const todo = await this.todoModel.findOne({ _id: id, user: userId });
     if (!todo) throw new NotFoundException('Todo not found');
     return todo;
   }
 
-  async update(id: string, data: any) {
-    const todo = await this.todoModel.findByIdAndUpdate(id, data, {
-      new: true,
+  async update(userId, id: string, data: any) {
+    const todo = await this.todoModel.findOneAndUpdate(
+      { _id: id, user: userId },
+      data,
+      {
+        new: true,
+      },
+    );
+    if (!todo) throw new NotFoundException('Todo not found');
+    return todo;
+  }
+
+  async delete(userId, id: string) {
+    const todo = await this.todoModel.findOneAndDelete({
+      user: userId,
+      _id: id,
     });
-    if (!todo) throw new NotFoundException('Todo not found');
-    return todo;
-  }
-
-  async delete(id: string) {
-    const todo = await this.todoModel.findByIdAndDelete(id);
     if (!todo) throw new NotFoundException('Todo not found');
     return todo;
   }
