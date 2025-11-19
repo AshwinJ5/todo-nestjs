@@ -25,7 +25,6 @@ export class TodoService {
       let sortQuery = {};
       let searchQuery = {};
       let completedQuery = {};
-      console.log(process.env.JWT_SECRET);
 
       if (search) {
         searchQuery = { title: new RegExp(search, 'i') };

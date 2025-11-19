@@ -39,17 +39,21 @@ export class TodoController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.todoService.findOne(id);
+  findOne(@GetUser('id') userId: string, @Param('id') id: string) {
+    return this.todoService.findOne(userId, id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body: any) {
-    return this.todoService.update(id, body);
+  update(
+    @GetUser('id') userId: string,
+    @Param('id') id: string,
+    @Body() body: any,
+  ) {
+    return this.todoService.update(userId, id, body);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.todoService.delete(id);
+  delete(@GetUser('id') userId: string, @Param('id') id: string) {
+    return this.todoService.delete(userId, id);
   }
 }
