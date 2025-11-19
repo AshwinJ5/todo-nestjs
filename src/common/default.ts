@@ -1,7 +1,4 @@
-// Moongose config
-const MONGO_URI =
-  process.env.MONGO_URI ||
-  'mongodb+srv://ashwinjoseph03_db_user:vaFeJYXdtE5BWL53@todo-basic.fswb9dp.mongodb.net/?appName=todo-basic';
+const MONGO_URI = process.env.MONGO_URI || 'MONGO_URI';
 
 const MONGO = {
   MONGO_URI,
